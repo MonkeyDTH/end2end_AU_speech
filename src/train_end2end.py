@@ -333,10 +333,12 @@ def main():
 
     current_time = get_current_time_string()
 
-    if is_Win32():
-        data_dir = "H:/speech_data"
-    else:
-        data_dir = "/home/hxp1/speech_data"
+    # data dir
+    # if is_Win32():
+    #     data_dir = "H:/speech_data"
+    # else:
+    #     data_dir = "/home/hxp1/speech_data"
+    data_dir = "../Data"
 
     # set proper paths
     if config["type"] == "cnn":
