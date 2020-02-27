@@ -20,12 +20,14 @@ def write_csv(filename, data):
         for arow in data:
             writer.writerow(arow)
 
+
 def get_fps(videofile):
     cap = cv2.VideoCapture(videofile)
     fps = cap.get(cv2.CAP_PROP_FPS)
     nFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     cap.release()
     return (nFrame, fps)
+
 
 def extract_one_frame_data(data, curPosition, nFrameSize, nSamPerFrame):
     frameData = np.zeros(nFrameSize, dtype=np.float32)
@@ -88,9 +90,15 @@ def extract_one_file(videofile, audiofile):
         chromas.append(chroma[:,0:3].flatten().tolist())
     return (mfccs, melspecs, chromas)
 
-video_root = "H:/Speech_data/RAVDESS"
-audio_root = "H:/Speech_data/RAVDESS_wav"
-feat_root = "H:/Speech_data/RAVDESS_feat_new"
+
+# video_root = "H:/Speech_data/RAVDESS"
+# audio_root = "H:/Speech_data/RAVDESS_wav"
+# feat_root = "H:/Speech_data/RAVDESS_feat_new"
+
+video_root = "./Data/RAVDESS/Video"
+feat_root = "./Data/RAVDESS/features"
+audio_root = "./Data/RAVDESS/Audio"
+
 
 def process_all():
     video_dir = plb.Path(video_root)
@@ -113,8 +121,6 @@ def process_all():
             write_csv(mel_path, melspecs)
             write_csv(chroma_path, chromas)
 
+
 if __name__ == "__main__":
     process_all()
-       
-        
-    

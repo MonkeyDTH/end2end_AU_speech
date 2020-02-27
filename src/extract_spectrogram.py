@@ -54,28 +54,32 @@ def extract_one_file(videofile, audiofile):
         dbspecs.append(newDB.flatten().tolist())
     return dbspecs
 
-video_root = "H:/Speech_data/RAVDESS"
-audio_root = "H:/Speech_data/RAVDESS_wav"
-feat_root = "H:/Speech_data/RAVDESS_feat"
+video_root = "../Data/RAVDESS/Video"
+feat_root = "../Data/RAVDESS/features"
+audio_root = "../Data/RAVDESS/Audio"
+
 
 def process_all():
     video_dir = plb.Path(video_root)
+    audio_dir = plb.Path(audio_root)
     feat_dir = plb.Path(feat_root)
     feat_dir.mkdir(parents=True, exist_ok=True)
     for actor in video_dir.iterdir():
-        if actor.name not in ("s8", "s9"):
-            continue
+        # print(f"[actor] {actor}")
+        num = 0
         for video_file in actor.iterdir():
-            #if video_file.name[len(video_file.name)-4:] != '.mp4' or video_file.name[0:2] != '01':
-            #    continue
-            seq_dir = plb.Path( feat_root + "/" + actor.name + "/" + video_file.stem )
+            # print(f"[video_file] {video_file}")
+            seq_dir = plb.Path(feat_dir / actor.name / video_file.stem)
+            # print(f"[seq_dir] {seq_dir}")
             if not seq_dir.exists():
-                continue
-            video_path = str(video_file)
-            audio_path = audio_root + "/" + actor.name + "/" + video_file.stem + ".wav"
-            dbspecs = extract_one_file(video_path, audio_path)
-            feature_path = feat_root + "/" + actor.name + "/" + video_file.stem + "/dbspectrogram.csv"
-            write_csv(feature_path, dbspecs)
+                seq_dir.mkdir(parents=True)
+            audio_path = plb.Path(audio_dir / actor.name / f'{video_file.stem.replace("02", "03", 1)}.wav')
+            # print(f'[audio_path] {audio_path}')
+            dbspecs = extract_one_file(str(video_file), str(audio_path))
+            feature_path = plb.Path(seq_dir / "dbspectrogram.csv")
+            # print(f'[feature_path] {feature_path}')
+            write_csv(str(feature_path), dbspecs)
+
 
 if __name__ == "__main__":
     process_all()
