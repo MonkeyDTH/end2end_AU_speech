@@ -19,14 +19,19 @@ NFFT = FREQ_DIM*2
 
 nFrameSize = (TIME_DIM - 3) * FREQ_DIM + NFFT
 
+
 def extract_one_file(videofile, audiofile):
     print (" --- " + audiofile)
     # get video FPS
     nFrames, fps = get_fps(videofile)
+    print(f"[nFrames] {nFrames}")
+    print(f"[fps] {fps}")
     # load audio
     data, sr = librosa.load(audiofile, sr=44100) # data is np.float32
     # number of audio samples per video frame
     nSamPerFrame = int(math.floor(float(sr) / fps))
+    print(f"[data] {data.shape}")
+    print(f"[nSamPerFrame] {nSamPerFrame}")
     # number of samples per 20ms
     #nSamPerFFTWindow = NFFT #int(math.ceil(float(sr) * 0.02))
     # number of samples per step 8ms
@@ -39,7 +44,7 @@ def extract_one_file(videofile, audiofile):
     # initPos negative means we need zero padding at the front.
     curPos = nSamPerFrame - nFrameSize
     dbspecs = []
-    for f in range(0,nFrames):
+    for f in range(0, nFrames):
         frameData, nextPos = extract_one_frame_data(data, curPos, nFrameSize, nSamPerFrame)
         curPos = nextPos
         # spectrogram transform
@@ -53,6 +58,7 @@ def extract_one_file(videofile, audiofile):
         # store
         dbspecs.append(newDB.flatten().tolist())
     return dbspecs
+
 
 video_root = "../Data/RAVDESS/Video"
 feat_root = "../Data/RAVDESS/features"
@@ -73,12 +79,14 @@ def process_all():
             # print(f"[seq_dir] {seq_dir}")
             if not seq_dir.exists():
                 seq_dir.mkdir(parents=True)
-            audio_path = plb.Path(audio_dir / actor.name / f'{video_file.stem.replace("02", "03", 1)}.wav')
+            audio_path = plb.Path(audio_dir / actor.name / f'{video_file.stem.replace("01", "03", 1)}.wav')
             # print(f'[audio_path] {audio_path}')
             dbspecs = extract_one_file(str(video_file), str(audio_path))
             feature_path = plb.Path(seq_dir / "dbspectrogram.csv")
             # print(f'[feature_path] {feature_path}')
             write_csv(str(feature_path), dbspecs)
+
+            break
 
 
 if __name__ == "__main__":

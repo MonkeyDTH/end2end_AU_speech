@@ -78,11 +78,19 @@ def visualize_one_audio_seq(model, video_frame_list, audio_csv_file, exp_npy_fil
     e_fake = estimate_one_audio_seq(model, audio_seq)
     if e_fake.shape[1] != 46:
         if e_fake.shape[1] == 49:
-            e_fake = e_fake[:,3:]
+            e_fake = e_fake[:, 3:]
         else:
             raise ValueError("unsupported output of audio model")
     # load true labels with optional median filter to smooth it (not used in training)
     e_real = load_exp_sequence(exp_npy_file, use_medfilt=True)
+
+    if e_real.shape[0] > e_fake.shape[0]:
+        length = e_fake.shape[0]
+        e_real = e_real[:length]
+
+    if e_real.shape[0] < e_fake.shape[0]:
+        length = e_real.shape[0]
+        e_fake = e_fake[:length]
 
     if e_real.shape[0] != e_fake.shape[0]:
         raise ValueError("number of true labels and number of outputs do not match")
@@ -101,11 +109,11 @@ def visualize_one_audio_seq(model, video_frame_list, audio_csv_file, exp_npy_fil
     n = e_real.shape[0]
     for i in range(n):
         if video is not None:
-            img = video[i,:,:,:]
+            img = video[i, :, :, :]
         else:
-            img = None # not include input video in the output
-        ef = e_fake[i,:]
-        er = e_real[i,:]
+            img = None  # not include input video in the output
+        ef = e_fake[i, :]
+        er = e_real[i, :]
         ret = visualizer.visualize(img, er, ef)
         # draw plot
         plot = SU.draw_error_bar_plot(er, ef, (ret.shape[1],200))
@@ -117,15 +125,21 @@ def visualize_one_audio_seq(model, video_frame_list, audio_csv_file, exp_npy_fil
 
 #----------------------------------------------------------------------------------------
 def test_one_seq(visualizer):
-    # directory to store output video. It will be created if it doesn't exist
-    save_dir = "H:/Speech_data/test_output_single"
-    model_file = "H:/Speech_data/model_audio2exp_2018-08-01-05-14/model_audio2exp_2018-08-01-05-14.dnn"
-    # video directory holding separate frames of the video. Each image should be square.
-    video_dir = "H:/FrontalFaceData/RAVDESS/Actor_21/01-01-07-02-01-01-21"
-    # spectrogram sequence is stored in a .csv file
-    audio_file = "H:/Speech_data/RAVDESS_feat/Actor_21/01-01-07-02-01-01-21/dbspectrogram.csv"
-    # AU labels are stored in an .npy file
-    exp_file = "H:/Training_data_image/ExpLabels/RAVDESS/Actor_21/01-01-07-02-01-01-21.npy"
+    # # directory to store output video. It will be created if it doesn't exist
+    # save_dir = "H:/Speech_data/test_output_single"
+    # model_file = "H:/Speech_data/model_audio2exp_2018-08-01-05-14/model_audio2exp_2018-08-01-05-14.dnn"
+    # # video directory holding separate frames of the video. Each image should be square.
+    # video_dir = "H:/FrontalFaceData/RAVDESS/Actor_21/01-01-07-02-01-01-21"
+    # # spectrogram sequence is stored in a .csv file
+    # audio_file = "H:/Speech_data/RAVDESS_feat/Actor_21/01-01-07-02-01-01-21/dbspectrogram.csv"
+    # # AU labels are stored in an .npy file
+    # exp_file = "H:/Training_data_image/ExpLabels/RAVDESS/Actor_21/01-01-07-02-01-01-21.npy"
+
+    save_dir = "../Data/test_output_single"
+    model_file = "../Model/model_audio2exp_2020-02-25-13-02/model_audio2exp_2020-02-25-13-02.dnn"
+    video_dir = "../Data/RAVDESS/Video_Frame/Actor_01/02-01-01-01-01-01-01"
+    audio_file = "../Data/RAVDESS/features/Actor_01/02-01-01-01-01-01-01/dbspectrogram.csv"
+    exp_file = "../Data/ExpLabels/RAVDESS/Actor_01/01-01-01-01-01-01-01.npy"
 
     video_list = get_items(video_dir, "full") # set to None if video_dir does not exist
     model = C.load_model(model_file)
@@ -136,4 +150,3 @@ def test_one_seq(visualizer):
 if __name__ == "__main__":
     visualizer = SU.Visualizer()
     test_one_seq(visualizer)
-    
