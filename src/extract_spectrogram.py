@@ -24,14 +24,10 @@ def extract_one_file(videofile, audiofile):
     print (" --- " + audiofile)
     # get video FPS
     nFrames, fps = get_fps(videofile)
-    print(f"[nFrames] {nFrames}")
-    print(f"[fps] {fps}")
     # load audio
-    data, sr = librosa.load(audiofile, sr=44100) # data is np.float32
+    data, sr = librosa.load(audiofile, sr=None) # data is np.float32
     # number of audio samples per video frame
     nSamPerFrame = int(math.floor(float(sr) / fps))
-    print(f"[data] {data.shape}")
-    print(f"[nSamPerFrame] {nSamPerFrame}")
     # number of samples per 20ms
     #nSamPerFFTWindow = NFFT #int(math.ceil(float(sr) * 0.02))
     # number of samples per step 8ms
@@ -72,21 +68,18 @@ def process_all():
     feat_dir.mkdir(parents=True, exist_ok=True)
     for actor in video_dir.iterdir():
         # print(f"[actor] {actor}")
-        num = 0
         for video_file in actor.iterdir():
             # print(f"[video_file] {video_file}")
             seq_dir = plb.Path(feat_dir / actor.name / video_file.stem)
             # print(f"[seq_dir] {seq_dir}")
             if not seq_dir.exists():
                 seq_dir.mkdir(parents=True)
-            audio_path = plb.Path(audio_dir / actor.name / f'{video_file.stem.replace("01", "03", 1)}.wav')
+            audio_path = plb.Path(audio_dir / actor.name / f'{video_file.stem}.wav')
             # print(f'[audio_path] {audio_path}')
             dbspecs = extract_one_file(str(video_file), str(audio_path))
             feature_path = plb.Path(seq_dir / "dbspectrogram.csv")
             # print(f'[feature_path] {feature_path}')
             write_csv(str(feature_path), dbspecs)
-
-            break
 
 
 if __name__ == "__main__":

@@ -371,6 +371,7 @@ def main():
     evaluate(test_file, features, labels, trainer, log_file)
     print ("Testing done!")
 
+
 # script calling
 if __name__=='__main__':
     main()
