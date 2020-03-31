@@ -142,6 +142,7 @@ def test_one_seq(visualizer):
     actor_list = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
                   "21", "22", "23", "24"]
+    actor = "05"
 
     for emotion in emotion_list:
         for emotion_intensity in emotion_intensity_list:
@@ -149,15 +150,15 @@ def test_one_seq(visualizer):
                 for repetition in repetition_list:
                     if emotion == "01" and emotion_intensity == "02":
                         continue
-                    sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-01"
+                    sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-{actor}"
                     print(f"[Start] sample: {sample}")
                     save_dir = f"../Test_output/GRU_{sample}"
                     # video directory holding separate frames of the video. Each image should be square.
-                    video_dir = f"../Data/RAVDESS/Video_Frame/Actor_01/{sample}"
+                    video_dir = f"../Data/RAVDESS/Video_Frame/Actor_{actor}/{sample}"
                     # spectrogram sequence is stored in a .csv file
-                    audio_file = f"../Data/RAVDESS/features/Actor_01/{sample}/dbspectrogram.csv"
+                    audio_file = f"../Data/RAVDESS/features/Actor_{actor}/{sample}/dbspectrogram.csv"
                     # AU labels are stored in an .npy file
-                    exp_file = f"../Data/ExpLabels/RAVDESS/Actor_01/{sample}.npy"
+                    exp_file = f"../Data/ExpLabels/RAVDESS/Actor_{actor}/{sample}.npy"
 
                     video_list = get_items(video_dir, "full")  # set to None if video_dir does not exist
                     visualize_one_audio_seq(model, video_list, audio_file, exp_file, visualizer, save_dir)
