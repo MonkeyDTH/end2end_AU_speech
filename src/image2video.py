@@ -119,6 +119,7 @@ def main():
                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
                   "21", "22", "23", "24"]
     actor = "05"
+    model_type = "LSTM"
 
     for emotion in emotion_list:
         for emotion_intensity in emotion_intensity_list:
@@ -129,7 +130,7 @@ def main():
                     sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-{actor}"
                     # sample = "01-01-01-01-01-01-01"
                     audio_file = f"../Data/RAVDESS/Audio/Actor_{actor}/{sample}.wav"
-                    frame_dir = plb.Path(f"../Test_output/GRU_{sample}")
+                    frame_dir = plb.Path(f"../Test_output/{model_type}_{sample}")
                     input_imgs = frame_dir / "result%06d.jpg"
                     print(input_imgs)
                     out_video_noaudio_fname = str(frame_dir / "output_noaudio.mp4")

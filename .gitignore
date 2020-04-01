@@ -107,3 +107,4 @@ Data/
 Model/
 src/test.py
 Test_output/
+.vscode/

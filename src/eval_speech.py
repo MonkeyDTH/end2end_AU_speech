@@ -10,6 +10,7 @@ import numpy as np
 import cntk as C
 import cv2
 from scipy.signal import medfilt
+import time
 
 import ShapeUtils2 as SU
 from SysUtils import make_dir, get_items, get_current_time_string
@@ -128,7 +129,8 @@ def test_one_seq(visualizer):
     """ Test one sequence """
     ''' Load model '''
     # model_file = "../Model/model_audio2exp_2020-02-25-13-02/model_audio2exp_2020-02-25-13-02.dnn"
-    model_file = "../Model/model_audio2exp_2020-02-25-15-07/model_audio2exp_2020-02-25-15-07.dnn"  # GRU
+    # model_file = "../Model/model_audio2exp_2020-02-25-15-07/model_audio2exp_2020-02-25-15-07.dnn"  # GRU
+    model_file = "../Model/model_audio2exp_2020-02-26-10-49/model_audio2exp_2020-02-26-10-49.dnn"  # LSTM
     model = C.load_model(model_file)
 
     ''' Set input and output dir '''
@@ -150,9 +152,10 @@ def test_one_seq(visualizer):
                 for repetition in repetition_list:
                     if emotion == "01" and emotion_intensity == "02":
                         continue
+                    start = time.time()
                     sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-{actor}"
                     print(f"[Start] sample: {sample}")
-                    save_dir = f"../Test_output/GRU_{sample}"
+                    save_dir = f"../Test_output/LSTM_{sample}"
                     # video directory holding separate frames of the video. Each image should be square.
                     video_dir = f"../Data/RAVDESS/Video_Frame/Actor_{actor}/{sample}"
                     # spectrogram sequence is stored in a .csv file
@@ -162,6 +165,8 @@ def test_one_seq(visualizer):
 
                     video_list = get_items(video_dir, "full")  # set to None if video_dir does not exist
                     visualize_one_audio_seq(model, video_list, audio_file, exp_file, visualizer, save_dir)
+                    duration = time.time() - start
+                    print(f"Time: {duration}")
 
     # filename = "01-01-01-01-01-01-01"
     # # directory to store output video. It will be created if it doesn't exist
