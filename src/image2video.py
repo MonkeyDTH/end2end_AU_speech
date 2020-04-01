@@ -84,16 +84,17 @@ def main():
                   "21", "22", "23", "24"]
 
     """ Video2image & crop & split audio"""
-    # video_dir = plb.Path("../Data/RAVDESS/Video/Actor_01/")
-    # frame_dir_parent = plb.Path("../Data/RAVDESS/Video_Frame/Actor_01/")
-    # audio_dir = plb.Path("../Data/RAVDESS/Audio/Actor_01/")
+    # actor_name = "05"
+    # video_dir = plb.Path(f"../Data/RAVDESS/Video/Actor_{actor_name}/")
+    # frame_dir_parent = plb.Path(f"../Data/RAVDESS/Video_Frame/Actor_{actor_name}/")
+    # audio_dir = plb.Path(f"../Data/RAVDESS/Audio/Actor_{actor_name}/")
     # for emotion in emotion_list:
     #     for emotion_intensity in emotion_intensity_list:
     #         for statement in statement_list:
     #             for repetition in repetition_list:
     #                 if emotion == "01" and emotion_intensity == "02":
     #                     continue
-    #                 sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-01"
+    #                 sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-{actor_name}"
     #                 video_fname = video_dir / (sample + ".mp4")
     #                 frame_dir = frame_dir_parent / sample
     #                 audio_fname = audio_dir / (sample + ".wav")
@@ -117,6 +118,7 @@ def main():
     actor_list = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
                   "21", "22", "23", "24"]
+    actor = "05"
 
     for emotion in emotion_list:
         for emotion_intensity in emotion_intensity_list:
@@ -124,9 +126,9 @@ def main():
                 for repetition in repetition_list:
                     if emotion == "01" and emotion_intensity == "02":
                         continue
-                    sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-01"
+                    sample = f"01-01-{emotion}-{emotion_intensity}-{statement}-{repetition}-{actor}"
                     # sample = "01-01-01-01-01-01-01"
-                    audio_file = f"../Data/RAVDESS/Audio/Actor_01/{sample}.wav"
+                    audio_file = f"../Data/RAVDESS/Audio/Actor_{actor}/{sample}.wav"
                     frame_dir = plb.Path(f"../Test_output/GRU_{sample}")
                     input_imgs = frame_dir / "result%06d.jpg"
                     print(input_imgs)
